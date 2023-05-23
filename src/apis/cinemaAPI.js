@@ -1,33 +1,42 @@
 import axiosClient from "./axiosClient";
 
-const theaterAPI = {
-  getTheaterSystem: () => {
-    return axiosClient.get("QuanLyRap/LayThongTinHeThongRap");
-  },
+export const apiGetHeThongRap = async () => {
+  const { data } = await axiosClient.get("/QuanLyRap/LayThongTinHeThongRap");
+  return data;
+};
 
-  getDetailTheater: (maHeThongRap) => {
-    return axiosClient.get("QuanLyRap/LayThongTinCumRapTheoHeThong", {
+export const apiGetCumRap = async (cinemaID) => {
+  const { data } = await axiosClient.get(
+    "/QuanLyRap/LayThongTinCumRapTheoHeThong",
+    {
       params: {
-        maHeThongRap: maHeThongRap,
+        maHeThongRap: cinemaID,
       },
-    });
-  },
+    }
+  );
+  return data;
+};
 
-  getTheaterSchedule: () => {
-    return axiosClient.get("QuanLyRap/LayThongTinLichChieuHeThongRap", {
+export const apiGetLichChieuRap = async (cinemaID) => {
+  const { data } = await axiosClient.get(
+    "/QuanLyRap/LayThongTinLichChieuHeThongRap?maNhom=GP14",
+    {
       params: {
-        maNhom: "GP14",
+        maHeThongRap: cinemaID,
       },
-    });
-  },
+    }
+  );
+  return data;
+};
 
-  getMovieSchedule: (maPhim) => {
-    return axiosClient.get("QuanLyRap/LayThongTinLichChieuPhim", {
+export const apiGetLichChieuPhim = async (maPhim) => {
+  const { data } = await axiosClient.get(
+    "/QuanLyRap/LayThongTinLichChieuPhim",
+    {
       params: {
         MaPhim: maPhim,
       },
-    });
-  },
+    }
+  );
+  return data;
 };
-
-export default theaterAPI;

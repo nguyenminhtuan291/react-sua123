@@ -1,12 +1,11 @@
-import React from 'react'
 import { Tabs } from "@mantine/core";
 import React, { useEffect, useState } from "react";
-import theaterAPI from "../../../apis/cinemaAPI";
 import cn from "classnames";
 import styles from "./ShowTime.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { apiGetLichChieuPhim } from "../../../apis/cinemaAPI";
 
-function Showtimes({ movieID }) {
+function ShowTime({ movieId }) {
   const navigate = useNavigate();
   const [theatersSystem, setTheatersSystem] = useState();
   const [maRap, setMaRap] = useState(null);
@@ -14,21 +13,21 @@ function Showtimes({ movieID }) {
 
   useEffect(() => {
     (async () => {
-      const data = await theaterAPI.getMovieSchedule(movieID);
-      setTheatersSystem(data.heThongRapChieu);
-      setMaRap(data.heThongRapChieu[0].maHeThongRap);
+      const data = await apiGetLichChieuPhim(movieId);
+      setTheatersSystem(data.content.heThongRapChieu);
+      setMaRap(data.content.heThongRapChieu[0].maHeThongRap);
     })();
-  }, [movieID]);
+  }, [movieId]);
 
   const selectedMaRap = (maRap, index) => {
     setMaRap(maRap);
     setIndex(index);
   };
-
+  console.log(theatersSystem);
   if (!theatersSystem) return;
 
   return (
-    <div className={styles.showTime} id="showTime">
+    <div className={styles.showTime} id="showTimes">
       <div className={cn("container", styles.wrapShowTime)}>
         <Tabs defaultValue={maRap}>
           <Tabs.List position="center">
@@ -49,43 +48,48 @@ function Showtimes({ movieID }) {
             ))}
           </Tabs.List>
 
-          <Tabs.Panel value={maRap}>
-            {theatersSystem[index].cumRapChieu.map((item) => (
-              <div
-                key={item.maCumRap}
-                className={cn("row ", styles.cumRapChieu)}
-              >
-                <div className="col-4">
-                  <div className={styles.InfoTheater}>
-                    <h4>{item.tenCumRap}</h4>
-                    <p>{item.diaChi}</p>
+          {theatersSystem.length > 0 && (
+            <Tabs.Panel value={maRap}>
+              {theatersSystem[index].cumRapChieu?.map((item) => (
+                <div
+                  key={item.maCumRap}
+                  className={cn("row ", styles.cumRapChieu)}
+                >
+                  <div className="col-4">
+                    <div className={styles.InfoTheater}>
+                      <h4>{item.tenCumRap}</h4>
+                      <p>{item.diaChi}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-8">
-                  <div className={cn("row", styles.lichChieuRap)}>
-                    {item.lichChieuPhim.map((i) => (
-                      <div
-                        key={i.maLichChieu}
-                        className="col-4 col-lg-3"
-                        onClick={() =>
-                          navigate(`/booking/${i.maLichChieu}`)
-                        }
-                      >
-                        <p className={styles.lichChseuPhim}>
-                          {i.ngayChieuGioChieu}
-                        </p>
-                      </div>
-                    ))}
+                  <div className="col-8">
+                    <div className={cn("row", styles.lichChieuRap)}>
+                      {item.lichChieuPhim.map((i) => (
+                        <div
+                          key={i.maLichChieu}
+                          className="col-4 col-lg-3"
+                          onClick={() => navigate(`/booking/${i.maLichChieu}`)}
+                        >
+                          <p className={styles.lichChieuPhim}>
+                            {i.ngayChieuGioChieu}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </Tabs.Panel>
+              ))}
+            </Tabs.Panel>
+          )}
+          {theatersSystem.length === 0 && (
+            <h1 className={styles.notLichCheu}>
+              Hiện không có lịch chiếu nào!
+            </h1>
+          )}
         </Tabs>
       </div>
     </div>
   );
-};
+}
 
-export default Showtimes
+export default ShowTime;

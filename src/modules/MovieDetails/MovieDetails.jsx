@@ -1,38 +1,20 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import Showtimes from './Showtimes/Showtimes'
-import MovieInfo from './MovieInfo/MovieInfo'
-import Loading from '../../components/Loading/Loading'
-import styles from './movie.module.scss';
-import movieAPI from '../../services/movieAPI';
+import React from "react";
+import { useParams } from "react-router-dom";
+import Showtimes from "./Showtimes/Showtimes";
+import MovieInfo from "./MovieInfo/MovieInfo";
 
 function MovieDetails() {
-  const { movieId } = useParams()
+  const { movieId } = useParams();
 
-  const [movie, setMovie] = useState(null);
-
-  useEffect(() => {
-    ( async () => {
-      try {
-        const data = await movieAPI.getMovieDetail(movieId);
-        setMovie(data)
-      } catch (error) {
-        console.log(error)
-      }
-    })();
-  },[movieId]);
-
-  if(!movie){
-    return <Loading />
-  }
+  console.log(movieId);
 
   return (
-    <div className={styles.wrapMovie}>
-      <MovieInfo movie={movie} />
+    <>
+      <MovieInfo movieId={movieId} />
 
-      <Showtimes movieID={movieId}  />
-    </div>
+      <Showtimes movieId={movieId} />
+    </>
   );
 }
 
-export default MovieDetails
+export default MovieDetails;

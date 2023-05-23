@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signout } from "../../slices/userSlice";
 import styles from "./Header.module.scss";
 
@@ -22,7 +22,9 @@ function Header() {
   return (
     <div className={styles.header}>
       <div className={styles.header__logo}>
-        <h3>Cybermovie</h3>
+        <Link to="/" style={{ fontSize: "x-large" }}>
+          Cybermovie
+        </Link>
       </div>
       <div className={styles.header__menu}>
         <a href="#movie">

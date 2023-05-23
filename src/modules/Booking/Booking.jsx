@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import InfoBooking from './InfoBooking/InfoBooking';
-import SeatList from './SeatList/SeatList';
+import InfoBooking from "./InfoBooking/InfoBooking";
+import SeatList from "./SeatList/SeatList";
 import Loading from "../../components/Loading/Loading";
 import { listBooking } from "../../slices/bookingMovieSlice";
 import cn from "classnames";
@@ -11,13 +11,14 @@ import styles from "./BookingMovie.module.scss";
 function Booking() {
   const { maLichChieu } = useParams();
   const dispatch = useDispatch();
-  const { infoMovie , selectedSeat } = useSelector((state) => state.bookingMovieSlice);
-
+  const { infoMovie, selectedSeat } = useSelector(
+    (state) => state.bookingMovieSlice
+  );
 
   useEffect(() => {
     dispatch(listBooking(maLichChieu));
   }, [selectedSeat]);
-
+  console.log(infoMovie);
   if (!infoMovie) {
     return <Loading />;
   }
@@ -36,6 +37,6 @@ function Booking() {
       </div>
     </div>
   );
-};
+}
 
-export default Booking
+export default Booking;
